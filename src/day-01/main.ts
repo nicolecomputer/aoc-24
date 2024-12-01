@@ -58,11 +58,5 @@ export function part2(input: string): number {
     return list1.map(i => i * entryCount(i, list2)).reduce(sum)
 }
 
-part2(`3   4
-4   3
-2   5
-1   3
-3   9
-3   3`)
-
-//console.log("Part 1: ", solve("src/day-01/input.txt", part1)) //?
+console.log("Part 1: ", solve("src/day-01/input.txt", part1)) //?
+console.log("Part 2: ", solve("src/day-01/input.txt", part2)) //?
