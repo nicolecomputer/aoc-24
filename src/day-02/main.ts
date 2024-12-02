@@ -59,9 +59,12 @@ function isSafeWithDapener(report: Report): boolean {
                     // This one is no good
                     return false
                 }
-                // ok we'll let this slide, you used your skip, let's move ahead 1
+                // ok we'll let this slide, you used your skip
                 skipUsed = true
-                i += 1
+            }
+            // Ok, not safe. You're out!
+            else {
+                return false
             }
         }
     }
