@@ -46,30 +46,23 @@ function isSafe(report: Report): boolean {
 }
 
 function isSafeWithDapener(report: Report): boolean {
-    const direction = levelDirection(report)
-    let skipUsed = false;
+    // If it's already safe, no need to try removing elements
+    if (isSafe(report)) {
+        return true;
+    }
 
-    for (let i = 1; i < report.length; i++) {
-        // Is the next step unsafe?
-        if (!safeChange(report[i - 1], report[i], direction)) {
-            // What if we ignore it and check the previous value against 1 ahead?
-            if (safeChange(report[i - 1], report[i + 1], direction)) {
-                // Have we skipped before
-                if (skipUsed) {
-                    // This one is no good
-                    return false
-                }
-                // ok we'll let this slide, you used your skip
-                skipUsed = true
-            }
-            // Ok, not safe. You're out!
-            else {
-                return false
-            }
+    // Try removing each element one at a time and check if it makes the report safe
+    for (let i = 0; i < report.length; i++) {
+        // Create a new array without the current element
+        const modifiedReport = [...report.slice(0, i), ...report.slice(i + 1)];
+
+        // If the modified report is safe, then this report is safe with the dampener
+        if (modifiedReport.length >= 2 && isSafe(modifiedReport)) {
+            return true;
         }
     }
 
-    return true
+    return false;
 }
 
 function part1(input: string): number {
@@ -87,5 +80,3 @@ console.log(`Part 2: ${solve("src/day-02/sample-input.txt", part2)}`)
 console.log("final")
 console.log(`Part 1: ${solve("src/day-02/input.txt", part1)}`)
 console.log(`Part 2: ${solve("src/day-02/input.txt", part2)}`)
-
-// It's not 338 or 877
