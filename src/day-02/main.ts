@@ -72,8 +72,12 @@ function part2(input: string): number {
     return input.split("\n").map(parseReport).filter(isSafeWithDapener).length
 }
 
+console.log("sample")
 console.log(`Part 1: ${solve("src/day-02/sample-input.txt", part1)}`)
-console.log(`Part 1: ${solve("src/day-02/sample-input.txt", part2)}`)
+console.log(`Part 2: ${solve("src/day-02/sample-input.txt", part2)}`)
 
+console.log("final")
 console.log(`Part 1: ${solve("src/day-02/input.txt", part1)}`)
-console.log(`Part 1: ${solve("src/day-02/input.txt", part2)}`)
+console.log(`Part 2: ${solve("src/day-02/input.txt", part2)}`)
+
+// It's not 338
