@@ -6,15 +6,15 @@ function solve<T>(inputFile: string, solution: (input: string) => T): T {
     return solved
 }
 
-// Part 1
 type Report = number[]
+type Direction = "INCREASING" | "DECREASING"
+
+const safeChangeAmount = [1, 3]
+
 function parseReport(input: string): Report {
     return input.split(" ").map(i => parseInt(i));
 }
 
-const safeChangeAmount = [1, 3]
-
-type Direction = "INCREASING" | "DECREASING"
 function safeChange(previousLevel: number, currentLevel: number, direction: Direction): boolean {
     if ((direction == "INCREASING" && currentLevel < previousLevel) ||
         (direction == "DECREASING" && currentLevel > previousLevel)) {
