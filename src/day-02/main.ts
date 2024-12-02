@@ -50,14 +50,19 @@ function isSafeWithDapener(report: Report): boolean {
     let skipUsed = false;
 
     for (let i = 1; i < report.length; i++) {
-        if (!safeChange(report[i - 1], report[i], direction) && safeChange(report[i - 1], report[i + 1], direction)) {
-            if (skipUsed) {
-                return false
+        // Is the next step unsafe?
+        if (!safeChange(report[i - 1], report[i], direction)) {
+            // What if we ignore it and check the previous value against 1 ahead?
+            if (safeChange(report[i - 1], report[i + 1], direction)) {
+                // Have we skipped before
+                if (skipUsed) {
+                    // This one is no good
+                    return false
+                }
+                // ok we'll let this slide, you used your skip, let's move ahead 1
+                skipUsed = true
+                i += 1
             }
-            skipUsed = true
-            i += 1
-        } else if (!safeChange(report[i - 1], report[i], direction)) {
-            return false
         }
     }
 
@@ -80,4 +85,4 @@ console.log("final")
 console.log(`Part 1: ${solve("src/day-02/input.txt", part1)}`)
 console.log(`Part 2: ${solve("src/day-02/input.txt", part2)}`)
 
-// It's not 338
+// It's not 338 or 877
