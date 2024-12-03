@@ -116,9 +116,9 @@ function part2(input: string): number {
 }
 
 console.log("sample")
-//console.log(`Part 1: ${solve("src/day-03/sample-input.txt", part1)}`) //161
+console.log(`Part 1: ${solve("src/day-03/sample-input.txt", part1)}`)
 console.log(`Part 2: ${solve("src/day-03/sample-input2.txt", part2)}`)
 
-// console.log("final")
-console.log(`Part 1: ${solve("src/day-03/input.txt", part1)}`) //174336360
+console.log("final")
+console.log(`Part 1: ${solve("src/day-03/input.txt", part1)}`)
 console.log(`Part 2: ${solve("src/day-03/input.txt", part2)}`)
