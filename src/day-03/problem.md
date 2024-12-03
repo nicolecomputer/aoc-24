@@ -1,3 +1,7 @@
+---
+title: AOC Day 03: Mull It Over
+---
+
 --- Day 3: Mull It Over ---
 
 "Our computers are having issues, so I have no idea if we have any Chief Historians in stock! You're welcome to check the warehouse, though," says the mildly flustered shopkeeper at the North Pole Toboggan Rental Shop. The Historians head out to take a look.
