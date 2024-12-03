@@ -1,5 +1,4 @@
 import { readFileSync } from "fs";
-import { parse } from "path";
 
 function solve<T>(inputFile: string, solution: (input: string) => T): T {
     const data = readFileSync(inputFile, "utf-8").trim()
