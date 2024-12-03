@@ -61,7 +61,6 @@ function parseInstruction(instruction: string): Instruction {
 function parseInstructions(input: string): Instruction[] {
     const regex = /mul\(\d+,\d+\)|don['']t\(\)|do\(\)/g;
 
-    [...input.matchAll(regex)].map(i => i)
     return [...input.matchAll(regex)]
         .map(match => match[0])
         .map(parseInstruction)
