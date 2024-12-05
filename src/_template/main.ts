@@ -15,9 +15,9 @@ function part2(input: string): number {
 }
 
 console.log("sample")
-console.log(`Part 1: ${solve("src/day-03/sample-input.txt", part1)}`)
-console.log(`Part 2: ${solve("src/day-03/sample-input.txt", part2)}`)
+console.log(`Part 1: ${solve("src/day-XX/sample-input.txt", part1)}`)
+console.log(`Part 2: ${solve("src/day-XX/sample-input.txt", part2)}`)
 
 // console.log("final")
-// console.log(`Part 1: ${solve("src/day-02/input.txt", part1)}`)
-// console.log(`Part 2: ${solve("src/day-02/input.txt", part2)}`)
+// console.log(`Part 1: ${solve("src/day-XX/input.txt", part1)}`)
+// console.log(`Part 2: ${solve("src/day-XX/input.txt", part2)}`)
