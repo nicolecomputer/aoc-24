@@ -39,10 +39,34 @@ function parse(input: string): ParsedInput {
     }
 }
 
+// Validation
+function isValid(pages: Page[], rule: Rule): boolean {
+    const firstIndex = pages.indexOf(rule.first)
+    const secondIndex = pages.indexOf(rule.second)
+    if (firstIndex == -1 || secondIndex == -1) {
+        return true
+    }
+    return firstIndex < secondIndex
+}
+
+function isValidForAllRules(pages: Page[], rules: Rule[]): boolean {
+    for (const rule of rules) {
+        if (!isValid(pages, rule)) {
+            return false
+        }
+    }
+    return true
+}
+
+// helper
+function middle<T>(items: T[]): T {
+    return items[Math.floor(items.length / 2)]
+}
+
 function part1(input: string): number {
     const { rules, pages } = parse(input)
-    rules //?
-    pages //?
+    rules
+
     return 0
 }
 
