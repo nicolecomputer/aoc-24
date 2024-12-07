@@ -6,16 +6,19 @@ function solve<T>(inputFile: string, solution: (input: string) => T): T {
     return solved
 }
 
+// Types
+
 type Page = number
+
 type Rule = {
     first: Page,
     second: Page
 }
+
 type ParsedInput = {
     rules: Rule[],
     pages: Array<Page[]>
 }
-
 
 // Parsing Logic
 
@@ -63,11 +66,19 @@ function middle<T>(items: T[]): T {
     return items[Math.floor(items.length / 2)]
 }
 
+function sum(total: number, entry: number): number {
+    return total + entry
+}
+
 function part1(input: string): number {
     const { rules, pages } = parse(input)
-    rules
 
-    return 0
+    const isCorrectlyOrdered = (pages: Page[]) => isValidForAllRules(pages, rules)
+
+    return pages
+        .filter(isCorrectlyOrdered)
+        .map(middle)
+        .reduce(sum)
 }
 
 function part2(input: string): number {
