@@ -61,6 +61,46 @@ function isValidForAllRules(pages: Page[], rules: Rule[]): boolean {
     return true
 }
 
+function ruleAppliesToPages(pages: Page[], rule: Rule): boolean {
+    const firstIndex = pages.indexOf(rule.first)
+    const secondIndex = pages.indexOf(rule.second)
+    if (firstIndex == -1 || secondIndex == -1) {
+        return false
+    }
+
+    return true
+}
+
+function swap<T>(items: T[], index1: number, index2: number): T[] {
+    const next = [...items]
+    next[index1] = items[index2]
+    next[index2] = items[index1]
+    return next
+}
+
+function orderCorrectly(pages: Page[], rules: Rule[]): Page[] {
+    const rulesThatApply = rules.filter(rule => ruleAppliesToPages(pages, rule))
+
+    let nextPages = [...pages]
+    let nextPagesOrderedCorrectly = false
+
+    while (!nextPagesOrderedCorrectly) {
+        for (const rule of rulesThatApply) {
+            if (!isValid(nextPages, rule)) {
+                const firstIndex = pages.indexOf(rule.first)
+                const secondIndex = pages.indexOf(rule.second)
+                nextPages = swap(nextPages, firstIndex, secondIndex)
+            }
+        }
+        nextPages //?
+        nextPagesOrderedCorrectly = isValidForAllRules(nextPages, rules)
+    }
+
+    nextPages
+    return nextPages
+}
+
+
 // helper
 function middle<T>(items: T[]): T {
     return items[Math.floor(items.length / 2)]
@@ -82,12 +122,21 @@ function part1(input: string): number {
 }
 
 function part2(input: string): number {
-    return 0
+    const { rules, pages } = parse(input)
+
+    const incorrectlyOrdered = (pages: Page[]) => !isValidForAllRules(pages, rules)
+
+    return pages
+        .filter(incorrectlyOrdered)
+        .map(pages => orderCorrectly(pages, rules)) //?
+        .map(middle)
+        .reduce(sum)
+    return 100
 }
 
 console.log("sample")
 console.log(`Part 1: ${solve("src/day-05/sample-input.txt", part1)}`)
-console.log(`Part 2: ${solve("src/day-05/sample-input.txt", part2)}`)
+// console.log(`Part 2: ${solve("src/day-05/sample-input.txt", part2)}`)
 
 // console.log("final")
 console.log(`Part 1: ${solve("src/day-05/input.txt", part1)}`)
