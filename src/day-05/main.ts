@@ -90,5 +90,5 @@ console.log(`Part 1: ${solve("src/day-05/sample-input.txt", part1)}`)
 console.log(`Part 2: ${solve("src/day-05/sample-input.txt", part2)}`)
 
 // console.log("final")
-// console.log(`Part 1: ${solve("src/day-XX/input.txt", part1)}`)
+console.log(`Part 1: ${solve("src/day-05/input.txt", part1)}`)
 // console.log(`Part 2: ${solve("src/day-XX/input.txt", part2)}`)
