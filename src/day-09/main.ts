@@ -220,12 +220,31 @@ function untilDone<T>(
 const compactUntilDoneByBit = untilDone(compactByBit, isCompactedByBit)
 const compactUntilDoneByFile = untilDone(compactByFile, isCompactedByFile)
 
-function part1(input: string): number {
-    const diskmap = parseDiskMap(input)
-    const compactedDiskMap = compactUntilDoneByBit(diskmap)
+class Pipeline<T> {
+    constructor(private _value: T) { }
 
-    console.log(visualizeFileMap(compactedDiskMap))
-    return checksumDisk(compactedDiskMap)
+    pipe<R>(fn: (value: T) => R): Pipeline<R> {
+        return new Pipeline(fn(this.value))
+    }
+
+    tap(fn: (value: T) => void): Pipeline<T> {
+        fn(this.value)
+        return this
+    }
+
+    get value(): T {
+        return this._value
+    }
+}
+
+
+function part1(input: string): number {
+    return new Pipeline(input)
+        .pipe(parseDiskMap)
+        .pipe(compactUntilDoneByBit)
+        .tap(diskMap => console.log(visualizeFileMap(diskMap)))
+        .pipe(checksumDisk)
+        .value
 }
 
 function part2(input: string): number {
@@ -241,5 +260,9 @@ console.log(`Part 1: ${solve("src/day-09/sample-input.txt", part1)}`) //1928
 console.log(`Part 2: ${solve("src/day-09/sample-input.txt", part2)}`)
 
 // console.log("final")
-console.log(`Part 1: ${solve("src/day-09/input.txt", part1)}`) //6299243228569
+//console.log(`Part 1: ${solve("src/day-09/input.txt", part1)}`) //6299243228569
 // console.log(`Part 2: ${solve("src/day-XX/input.txt", part2)}`)
+
+
+// Helpers
+
