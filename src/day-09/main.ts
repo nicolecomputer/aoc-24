@@ -93,7 +93,7 @@ function isFreeSpace(s: DiskMapItem): boolean {
     return s.type === "freespace"
 }
 
-function isCompacted(map: DiskMap): boolean {
+function isCompactedByBit(map: DiskMap): boolean {
     return findFirstIndex(map, isFreeSpace) === findLastIndex(map, isFreeSpace)
 }
 
@@ -190,35 +190,55 @@ function checksumDisk(disk: DiskMap): number {
     return total
 }
 
+function compactByFile(map: DiskMap): DiskMap {
+    return map
+}
+
+function isCompactedByFile(map: DiskMap): boolean {
+    return true
+}
+
 function sum(total: number, entry: number): number {
     return total + entry
 }
 
-function compactUntilDone(diskmap: DiskMap): DiskMap {
-    let current = diskmap
+function untilDone<T>(
+    transformFn: (map: T) => T,
+    isDone: (map: T) => boolean
+): (diskmap: T) => T {
+    return (a: T) => {
+        let current = a
 
-    while (!isCompacted(current)) {
-        current = compactByBit(current)
+        while (!isDone(current)) {
+            current = transformFn(current)
+        }
+
+        return current
     }
-
-    return current
 }
+
+const compactUntilDoneByBit = untilDone(compactByBit, isCompactedByBit)
+const compactUntilDoneByFile = untilDone(compactByFile, isCompactedByFile)
 
 function part1(input: string): number {
     const diskmap = parseDiskMap(input)
-    const compactedDiskMap = compactUntilDone(diskmap)
+    const compactedDiskMap = compactUntilDoneByBit(diskmap)
 
     console.log(visualizeFileMap(compactedDiskMap))
     return checksumDisk(compactedDiskMap)
 }
 
 function part2(input: string): number {
-    return 0
+    const diskmap = parseDiskMap(input)
+    const compactedDiskMap = compactUntilDoneByFile(diskmap)
+
+    console.log(visualizeFileMap(compactedDiskMap))
+    return checksumDisk(compactedDiskMap)
 }
 
 // console.log("sample")
 console.log(`Part 1: ${solve("src/day-09/sample-input.txt", part1)}`) //1928
-// console.log(`Part 2: ${solve("src/day-XX/sample-input.txt", part2)}`)
+console.log(`Part 2: ${solve("src/day-09/sample-input.txt", part2)}`)
 
 // console.log("final")
 console.log(`Part 1: ${solve("src/day-09/input.txt", part1)}`) //6299243228569
