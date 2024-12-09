@@ -85,14 +85,22 @@ function findLastIndex<T>(items: T[], predicate: (item: T) => boolean): number {
     return -1
 }
 
+function findFirstIndex<T>(items: T[], predicate: (item: T) => boolean): number {
+    return items.findIndex(predicate)
+}
+
+function isFreeSpace(s: DiskMapItem): boolean {
+    return s.type === "freespace"
+}
+
 function isCompacted(map: DiskMap): boolean {
-    return false
+    return findFirstIndex(map, isFreeSpace) === findLastIndex(map, isFreeSpace)
 }
 
 function compact(map: DiskMap): DiskMap {
     let nextMap = [...map]
 
-    const freeSpotIndex = map.findIndex(s => s.type === "freespace" && s.length > 0)
+    const freeSpotIndex = findFirstIndex(map, s => s.type === "freespace" && s.length > 0)
     const freeSpot = map[freeSpotIndex]
 
     const fileToMoveIndex = findLastIndex(map, s => s.type === "file" && s.length > 0)
@@ -119,7 +127,7 @@ function compact(map: DiskMap): DiskMap {
     // Cleanup
     // - Remove empty blank spots / empty data
     // - Join neighboring data types
-    nextMap = removeEmptySpots(nextMap) //?
+    nextMap = removeEmptySpots(nextMap)
     nextMap = joinNeighbors(nextMap)
     return nextMap
 }
@@ -140,12 +148,13 @@ function joinNeighbors(map: DiskMap): DiskMap {
         const a = nextMap[i - 1]
         const b = nextMap[i]
         if (isJoinable(a, b)) {
-            console.log(a, b)
             nextMap[i] = {
                 ...a,
                 length: a.length + b.length
             }
             nextMap.splice(i - 1, 1)
+            // Step back to make sure we compare this with the next one
+            i--;
         }
     }
     return nextMap
@@ -159,19 +168,15 @@ function part1(input: string): number {
     const diskmap = parseDiskMap(input)
 
     let a = diskmap
-    visualizeFileMap(a) //?
-    a = compact(a)
-    visualizeFileMap(a) //?
-    a = compact(a)
-    visualizeFileMap(a) //?
-    a = compact(a)
-    visualizeFileMap(a) //?
-    // a = compact(a)
-    // visualizeFileMap(a) //?
-    // a = compact(a)
-    // visualizeFileMap(a) //?
+    let done = isCompacted(a)
 
-    a //?
+    while (!done) {
+        a = compact(a)
+        visualizeFileMap(a) //?
+        done = isCompacted(a)
+    }
+
+    visualizeFileMap(a)
     return 0
 }
 
@@ -179,7 +184,7 @@ function part2(input: string): number {
     return 0
 }
 
-console.log("sample")
+// console.log("sample")
 console.log(`Part 1: ${solve("src/day-09/sample-input.txt", part1)}`)
 // console.log(`Part 2: ${solve("src/day-XX/sample-input.txt", part2)}`)
 
