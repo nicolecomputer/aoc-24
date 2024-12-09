@@ -164,6 +164,36 @@ function removeEmptySpots(map: DiskMap): DiskMap {
     return map.filter(s => s.length > 0)
 }
 
+function checksumItem(item: DiskMapItem, index: number): number {
+    if (item.type === "freespace") {
+        return -1;
+    }
+    let total = 0;
+    for (let i = 0; i < item.length; i++) {
+        const componentChecksum = (index + i) * item.id;
+        total += componentChecksum
+    }
+    return total;
+}
+
+function checksumDisk(disk: DiskMap): number {
+    let index = 0;
+    let total = 0;
+    for (const item of disk) {
+        const itemChecksum = checksumItem(item, index)
+        if (itemChecksum > 0) {
+            total += itemChecksum
+        }
+        index += item.length
+    }
+
+    return total
+}
+
+function sum(total: number, entry: number): number {
+    return total + entry
+}
+
 function part1(input: string): number {
     const diskmap = parseDiskMap(input)
 
@@ -172,12 +202,12 @@ function part1(input: string): number {
 
     while (!done) {
         a = compact(a)
-        visualizeFileMap(a) //?
+        visualizeFileMap(a)
         done = isCompacted(a)
     }
 
-    visualizeFileMap(a)
-    return 0
+    console.log(visualizeFileMap(a))
+    return checksumDisk(a)
 }
 
 function part2(input: string): number {
