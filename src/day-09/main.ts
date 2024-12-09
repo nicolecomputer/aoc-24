@@ -97,7 +97,7 @@ function isCompacted(map: DiskMap): boolean {
     return findFirstIndex(map, isFreeSpace) === findLastIndex(map, isFreeSpace)
 }
 
-function compact(map: DiskMap): DiskMap {
+function compactByBit(map: DiskMap): DiskMap {
     let nextMap = [...map]
 
     const freeSpotIndex = findFirstIndex(map, s => s.type === "freespace" && s.length > 0)
@@ -194,20 +194,22 @@ function sum(total: number, entry: number): number {
     return total + entry
 }
 
-function part1(input: string): number {
-    const diskmap = parseDiskMap(input)
+function compactUntilDone(diskmap: DiskMap): DiskMap {
+    let current = diskmap
 
-    let a = diskmap
-    let done = isCompacted(a)
-
-    while (!done) {
-        a = compact(a)
-        visualizeFileMap(a)
-        done = isCompacted(a)
+    while (!isCompacted(current)) {
+        current = compactByBit(current)
     }
 
-    console.log(visualizeFileMap(a))
-    return checksumDisk(a)
+    return current
+}
+
+function part1(input: string): number {
+    const diskmap = parseDiskMap(input)
+    const compactedDiskMap = compactUntilDone(diskmap)
+
+    console.log(visualizeFileMap(compactedDiskMap))
+    return checksumDisk(compactedDiskMap)
 }
 
 function part2(input: string): number {
@@ -215,9 +217,9 @@ function part2(input: string): number {
 }
 
 // console.log("sample")
-console.log(`Part 1: ${solve("src/day-09/sample-input.txt", part1)}`)
+console.log(`Part 1: ${solve("src/day-09/sample-input.txt", part1)}`) //1928
 // console.log(`Part 2: ${solve("src/day-XX/sample-input.txt", part2)}`)
 
 // console.log("final")
-// console.log(`Part 1: ${solve("src/day-XX/input.txt", part1)}`)
+console.log(`Part 1: ${solve("src/day-09/input.txt", part1)}`) //6299243228569
 // console.log(`Part 2: ${solve("src/day-XX/input.txt", part2)}`)
