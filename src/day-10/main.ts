@@ -35,7 +35,7 @@ const findAllTrailHeads = findAll(TrailHeadElevation)
 
 // Parsing
 function parseRow(row: string): Elevation[] {
-    return row.split("").map(elevation => parseInt(elevation, 10))
+    return row.split("").map(elevation => parseInt(elevation, 10) || -1)
 }
 
 function parseTrailMap(input: string): TrailMap {
@@ -45,18 +45,24 @@ function parseTrailMap(input: string): TrailMap {
 }
 
 // Logic
-function pathExists(map: TrailMap, peak: Location): boolean {
-    return false
+function isOutOfBound(map: TrailMap, location: Location): boolean {
+    const [row, col] = location
+    return row >= 0 && row < map.length && col >= 0 && col < map[0].length
 }
 
 function neighbors(map: TrailMap, location: Location): Location[] {
-    return []
+    return [
+        [location[0] + 1, location[1]] as Location,
+        [location[0] - 1, location[1]] as Location,
+        [location[0], location[1] + 1] as Location,
+        [location[0], location[1] - 1] as Location,
+    ].filter(n => isOutOfBound(map, n))
 }
 
 function findStepdowns(map: TrailMap, location: Location): Location[] {
     const [row, col] = location
     const currentElevation = map[row][col]
-    const allNeighbors = neighbors(map, location)
+    const allNeighbors = neighbors(map, location) //?
     return allNeighbors.filter(neighborLocation => {
         const elevationForNeighbor = map[neighborLocation[0]][neighborLocation[1]]
         return elevationForNeighbor === currentElevation - 1
@@ -74,7 +80,12 @@ function pathTerminatesByStepdown(map: TrailMap, location: Location): boolean {
     if (stepdowns.length === 0) {
         return false
     }
-    return false
+
+    return stepdowns
+        .map(stepdown => pathTerminatesByStepdown(map, stepdown))
+        .filter(doesTerminate => doesTerminate)
+        .length > 0
+
 }
 
 function part1(input: string): number {
@@ -83,6 +94,12 @@ function part1(input: string): number {
 
     map //
     peaks //
+
+    const peaksThatTerminate = peaks.filter(peak => {
+        return pathTerminatesByStepdown(map, peak)
+    })
+
+    peaksThatTerminate.length //?
     return 0
 }
 
