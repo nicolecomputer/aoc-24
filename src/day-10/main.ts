@@ -6,6 +6,8 @@ function solve<T>(inputFile: string, solution: (input: string) => T): T {
     return solved
 }
 
+// Domain Concepts
+
 type Elevation = number
 type TrailMap = Elevation[][]
 
@@ -31,6 +33,7 @@ function findAll(elevation: Elevation): (map: TrailMap) => Location[] {
 const findAllPeaks = findAll(MaxElevation)
 const findAllTrailHeads = findAll(TrailHeadElevation)
 
+// Parsing
 function parseRow(row: string): Elevation[] {
     return row.split("").map(elevation => parseInt(elevation, 10))
 }
@@ -39,6 +42,39 @@ function parseTrailMap(input: string): TrailMap {
     return input
         .split("\n")
         .map(parseRow)
+}
+
+// Logic
+function pathExists(map: TrailMap, peak: Location): boolean {
+    return false
+}
+
+function neighbors(map: TrailMap, location: Location): Location[] {
+    return []
+}
+
+function findStepdowns(map: TrailMap, location: Location): Location[] {
+    const [row, col] = location
+    const currentElevation = map[row][col]
+    const allNeighbors = neighbors(map, location)
+    return allNeighbors.filter(neighborLocation => {
+        const elevationForNeighbor = map[neighborLocation[0]][neighborLocation[1]]
+        return elevationForNeighbor === currentElevation - 1
+    })
+}
+
+function pathTerminatesByStepdown(map: TrailMap, location: Location): boolean {
+    const [row, col] = location
+    const currentElevation = map[row][col]
+    if (currentElevation === TrailHeadElevation) {
+        return true
+    }
+
+    const stepdowns = findStepdowns(map, location)
+    if (stepdowns.length === 0) {
+        return false
+    }
+    return false
 }
 
 function part1(input: string): number {
