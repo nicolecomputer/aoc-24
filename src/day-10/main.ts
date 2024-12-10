@@ -9,9 +9,32 @@ function solve<T>(inputFile: string, solution: (input: string) => T): T {
 type Elevation = number
 type TrailMap = Elevation[][]
 
+// Expressed as row, column
+type Location = [number, number]
+const TrailHeadElevation = 0;
+const MaxElevation = 9;
+
+function findAll(elevation: Elevation): (map: TrailMap) => Location[] {
+    return (map: TrailMap) => {
+        let result: Location[] = []
+        for (let row = 0; row < map.length; row++) {
+            for (let col = 0; col < map[row].length; col++) {
+                if (map[row][col] === elevation) {
+                    result.push([row, col])
+                }
+            }
+        }
+        return result
+    }
+}
+
+const findAllPeaks = findAll(MaxElevation)
+const findAllTrailHeads = findAll(TrailHeadElevation)
+
 function parseRow(row: string): Elevation[] {
     return row.split("").map(elevation => parseInt(elevation, 10))
 }
+
 function parseTrailMap(input: string): TrailMap {
     return input
         .split("\n")
@@ -20,9 +43,14 @@ function parseTrailMap(input: string): TrailMap {
 
 function part1(input: string): number {
     const map = parseTrailMap(input)
+    const peaks = findAllPeaks(map)
+
     map //
+    peaks //
     return 0
 }
+
+
 
 function part2(input: string): number {
     return 0
