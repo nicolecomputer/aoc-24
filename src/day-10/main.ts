@@ -102,20 +102,27 @@ function part1(input: string): number {
     return findAllTrailHeads(map)
         .map(start => {
             return pathTerminatesByStepUp(map, start)
-        })
+        }) //?
         .map(uniqPaths)
         .map(paths => paths.length)
         .reduce(sum)
 }
 
 function part2(input: string): number {
-    return 0
+    const map = parseTrailMap(input)
+
+    return findAllTrailHeads(map)
+        .map(start => {
+            return pathTerminatesByStepUp(map, start)
+        })
+        .map(paths => paths.length)
+        .reduce(sum)
 }
 
 console.log("sample")
 console.log(`Part 1: ${solve("src/day-10/sample-input.txt", part1)} `)
-// console.log(`Part 2: ${ solve("src/day-XX/sample-input.txt", part2) } `)
+console.log(`Part 2: ${solve("src/day-10/sample-input.txt", part2)} `)
 
 // console.log("final")
-// console.log(`Part 1: ${ solve("src/day-XX/input.txt", part1) } `)
-// console.log(`Part 2: ${ solve("src/day-XX/input.txt", part2) } `)
+console.log(`Part 1: ${solve("src/day-10/input.txt", part1)} `)
+console.log(`Part 2: ${solve("src/day-10/input.txt", part2)} `)
