@@ -35,7 +35,7 @@ const findAllTrailHeads = findAll(TrailHeadElevation)
 
 // Parsing
 function parseRow(row: string): Elevation[] {
-    return row.split("").map(elevation => parseInt(elevation, 10) || -1)
+    return row.split("").map(elevation => parseInt(elevation, 10))
 }
 
 function parseTrailMap(input: string): TrailMap {
@@ -45,7 +45,7 @@ function parseTrailMap(input: string): TrailMap {
 }
 
 // Logic
-function isOutOfBound(map: TrailMap, location: Location): boolean {
+function isOutOfBounds(map: TrailMap, location: Location): boolean {
     const [row, col] = location
     return row >= 0 && row < map.length && col >= 0 && col < map[0].length
 }
@@ -56,51 +56,58 @@ function neighbors(map: TrailMap, location: Location): Location[] {
         [location[0] - 1, location[1]] as Location,
         [location[0], location[1] + 1] as Location,
         [location[0], location[1] - 1] as Location,
-    ].filter(n => isOutOfBound(map, n))
+    ].filter(n => isOutOfBounds(map, n))
 }
 
-function findStepdowns(map: TrailMap, location: Location): Location[] {
+function findStepUps(map: TrailMap, location: Location): Location[] {
     const [row, col] = location
     const currentElevation = map[row][col]
-    const allNeighbors = neighbors(map, location) //?
+    const allNeighbors = neighbors(map, location)
     return allNeighbors.filter(neighborLocation => {
         const elevationForNeighbor = map[neighborLocation[0]][neighborLocation[1]]
-        return elevationForNeighbor === currentElevation - 1
+        return elevationForNeighbor === currentElevation + 1
     })
 }
 
-function pathTerminatesByStepdown(map: TrailMap, location: Location): boolean {
+function isPeak(map: TrailMap, location: Location): boolean {
     const [row, col] = location
     const currentElevation = map[row][col]
-    if (currentElevation === TrailHeadElevation) {
-        return true
+    return currentElevation === MaxElevation
+}
+
+function sum(total: number, entry: number): number {
+    return total + entry
+}
+
+function pathTerminatesByStepUp(map: TrailMap, location: Location): Location[] {
+    if (isPeak(map, location)) {
+        return [location]
     }
 
-    const stepdowns = findStepdowns(map, location)
-    if (stepdowns.length === 0) {
-        return false
+    return findStepUps(map, location)
+        .map(step => pathTerminatesByStepUp(map, step))
+        .reduce((all, steps) => [...all, ...steps], [])
+}
+
+function uniqPaths(locations: Location[]): Location[] {
+    let result = new Map<string, Location>()
+    for (const location of locations) {
+        result.set(`${location[0]} - ${location[1]}`, location)
     }
-
-    return stepdowns
-        .map(stepdown => pathTerminatesByStepdown(map, stepdown))
-        .filter(doesTerminate => doesTerminate)
-        .length > 0
-
+    return [...result.values()]
 }
 
 function part1(input: string): number {
     const map = parseTrailMap(input)
-    const peaks = findAllPeaks(map)
+    const start = findAllTrailHeads(map)
 
-    map //
-    peaks //
-
-    const peaksThatTerminate = peaks.filter(peak => {
-        return pathTerminatesByStepdown(map, peak)
-    })
-
-    peaksThatTerminate.length //?
-    return 0
+    return findAllTrailHeads(map)
+        .map(start => {
+            return pathTerminatesByStepUp(map, start)
+        })
+        .map(uniqPaths)
+        .map(paths => paths.length)
+        .reduce(sum)
 }
 
 
@@ -110,9 +117,9 @@ function part2(input: string): number {
 }
 
 console.log("sample")
-console.log(`Part 1: ${solve("src/day-10/sample-input.txt", part1)}`)
-// console.log(`Part 2: ${solve("src/day-XX/sample-input.txt", part2)}`)
+console.log(`Part 1: ${solve("src/day-10/sample-input.txt", part1)} `)
+// console.log(`Part 2: ${ solve("src/day-XX/sample-input.txt", part2) } `)
 
 // console.log("final")
-// console.log(`Part 1: ${solve("src/day-XX/input.txt", part1)}`)
-// console.log(`Part 2: ${solve("src/day-XX/input.txt", part2)}`)
+// console.log(`Part 1: ${ solve("src/day-XX/input.txt", part1) } `)
+// console.log(`Part 2: ${ solve("src/day-XX/input.txt", part2) } `)
