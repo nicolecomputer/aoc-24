@@ -7,16 +7,15 @@ function solve<T>(inputFile: string, solution: (input: string) => T): T {
 }
 
 // Domain Concepts
-
 type Elevation = number
 type TrailMap = Elevation[][]
 
 // Expressed as row, column
 type Location = [number, number]
 const TrailHeadElevation = 0;
-const MaxElevation = 9;
+const PeakElevation = 9;
 
-function findAll(elevation: Elevation): (map: TrailMap) => Location[] {
+function findAllAtElevation(elevation: Elevation): (map: TrailMap) => Location[] {
     return (map: TrailMap) => {
         let result: Location[] = []
         for (let row = 0; row < map.length; row++) {
@@ -30,8 +29,8 @@ function findAll(elevation: Elevation): (map: TrailMap) => Location[] {
     }
 }
 
-const findAllPeaks = findAll(MaxElevation)
-const findAllTrailHeads = findAll(TrailHeadElevation)
+const findAllPeaks = findAllAtElevation(PeakElevation)
+const findAllTrailHeads = findAllAtElevation(TrailHeadElevation)
 
 // Parsing
 function parseRow(row: string): Elevation[] {
@@ -72,7 +71,7 @@ function findStepUps(map: TrailMap, location: Location): Location[] {
 function isPeak(map: TrailMap, location: Location): boolean {
     const [row, col] = location
     const currentElevation = map[row][col]
-    return currentElevation === MaxElevation
+    return currentElevation === PeakElevation
 }
 
 function sum(total: number, entry: number): number {
