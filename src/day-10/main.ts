@@ -99,7 +99,6 @@ function uniqPaths(locations: Location[]): Location[] {
 
 function part1(input: string): number {
     const map = parseTrailMap(input)
-    const start = findAllTrailHeads(map)
 
     return findAllTrailHeads(map)
         .map(start => {
@@ -109,8 +108,6 @@ function part1(input: string): number {
         .map(paths => paths.length)
         .reduce(sum)
 }
-
-
 
 function part2(input: string): number {
     return 0
